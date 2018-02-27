@@ -20,23 +20,22 @@ def add_popular_subreddits():
     return
 
 
-def add_top_submissions(subreddit_name, limit='all'):
+def add_top_submissions(subreddit_model, limit='all'):
     client = get_reddit_client()
-    subreddit = client.subreddit(subreddit_name)
+    subreddit = client.subreddit(subreddit_model.subreddit_name)
     for post in subreddit.top(limit):
-        _, _ = Submission.objects.create_or_get(subreddit=subreddit,
+        _, _ = Submission.objects.get_or_create(subreddit=subreddit_model,
                                                 submission_title=post.title,
                                                 submission_id=post.id)
     return
 
 
-def add_comments(submission_id):
+def add_comments(submission_model):
     client = get_reddit_client()
-    submission_model = Submission.objects.get()
-    submission = client.submission(id=submission_id)
+    submission = client.submission(id=submission_model.submission_id)
 
     for comment in submission.comments.list():
         submission.comments.replace_more(limit=0)
-        _, _ = Comment.objects.get_or_create(submission=submission_model, comment_text=comment.comment_text)
+        _, _ = Comment.objects.get_or_create(submission=submission_model, comment_text=comment.body)
     return
 
