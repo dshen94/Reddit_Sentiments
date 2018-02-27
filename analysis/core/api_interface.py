@@ -20,7 +20,7 @@ def add_popular_subreddits():
     return
 
 
-def add_top_submissions(subreddit_name, limit=100):
+def add_top_submissions(subreddit_name, limit='all'):
     client = get_reddit_client()
     subreddit = client.subreddit(subreddit_name)
     for post in subreddit.top(limit):
