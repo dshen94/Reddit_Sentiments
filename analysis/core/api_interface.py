@@ -37,7 +37,7 @@ def get_submission_with_model(submission_model):
 
 def add_comments(submission_model):
     submission = get_submission_with_model(submission_model)
-    submission.comments.replace_more(limit=100)
+    submission.comments.replace_more(limit=0)
     submission.comment_limit = 100
 
     for comment in submission.comments.list():
@@ -45,4 +45,3 @@ def add_comments(submission_model):
                                              comment_text=comment.body,
                                              comment_id=comment.id)
     return
-
