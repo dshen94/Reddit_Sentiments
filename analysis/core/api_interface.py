@@ -38,8 +38,9 @@ def get_submission_with_model(submission_model):
 def add_comments(submission_model):
     submission = get_submission_with_model(submission_model)
     submission.comments.replace_more(limit=100)
+    submission.comment_limit = 100
 
-    for comment in submission.comments.top(limit=100):
+    for comment in submission.comments.list():
         _, _ = Comment.objects.get_or_create(submission=submission_model,
                                              comment_text=comment.body,
                                              comment_id=comment.id)
