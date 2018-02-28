@@ -30,12 +30,18 @@ def add_top_submissions(subreddit_model, limit='all'):
     return
 
 
-def add_comments(submission_model):
+def get_submission_with_model(submission_model):
     client = get_reddit_client()
-    submission = client.submission(id=submission_model.submission_id)
+    return client.submission(id=submission_model.submission_id)
 
-    for comment in submission.comments.list():
-        submission.comments.replace_more(limit=0)
-        _, _ = Comment.objects.get_or_create(submission=submission_model, comment_text=comment.body)
+
+def add_comments(submission_model):
+    submission = get_submission_with_model(submission_model)
+    submission.comments.replace_more(limit=100)
+
+    for comment in submission.comments.top(limit=100):
+        _, _ = Comment.objects.get_or_create(submission=submission_model,
+                                             comment_text=comment.body,
+                                             comment_id=comment.id)
     return
 
